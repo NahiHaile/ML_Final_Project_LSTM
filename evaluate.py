@@ -2,6 +2,10 @@ import argparse
 
 from irradiance_rnn.evaluate import evaluate
 from irradiance_rnn.plot import pretty_plot
+# my own imports
+import pandas as pd
+from datetime import datetime
+
 
 
 def main():
@@ -70,7 +74,32 @@ def main():
     dates, predicted, actual, rmse = evaluate(**args)
     if args['plot']:
         pretty_plot(dates, predicted, actual, round(rmse, 2))
+        #pretty_plot(dates, predicted)
 
+    # new code that I put
+
+    # Create DataFrame
+    df_results = pd.DataFrame({
+        "Date": dates,
+        "Predicted_GHI": predicted.flatten(),
+        "Actual_GHI": actual.flatten()
+    })
+
+    # Add RMSE at the end (optional)
+    df_results.loc[len(df_results)] = ["RMSE", rmse, ""]
+
+    # Generate dynamic filename using model name and current time
+    model_name = args['model_name'] if 'model_name' in args else 'model'
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"results_{model_name}_{timestamp}.csv"
+    #filename = f"results_{model_name}_rmse{rmse:.3f}_{timestamp}.csv"
+
+    # Save to CSV
+    df_results.to_csv(filename, index=False)
+
+    print(f"✅ Saved predictions to '{filename}'")
+
+    # end of my code
 
 if __name__ == '__main__':
     main()

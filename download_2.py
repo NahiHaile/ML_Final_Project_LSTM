@@ -36,10 +36,11 @@ def split_years(years):
 def format_url(lat, lon, year, interval, attributes='ghi'):
     with open('./config/config.json') as json_file:
         data = json.load(json_file)
-    is_leap_year = leap_year(year)
+    is_leap_year = leap_year(2025)
     url_frmt_str = (
         #f'https://developer.nrel.gov/api/solar/nsrdb_psm3_download.csv'
-        f'https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-GOES-aggregated-v4-0-0-download.csv'
+        #f'https://developer.nrel.gov/api/nsrdb/v2/solar/nsrdb-GOES-aggregated-v4-0-0-download.csv'
+        f'https://developer.nrel.gov/api/solar/nsrdb_psm3_tmy_download.csv'
         f'?wkt=POINT({lon}%20{lat})&names={year}&leap_day={is_leap_year}&interval'
         f'={interval}&utc=false&full_name={data["YOUR_NAME"]}'
         f'&email={data["YOUR_EMAIL"]}&affiliation={data["YOUR_AFFILIATION"]}'

@@ -5,6 +5,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import torch
+from Tools.scripts.dutree import display
 from sklearn.preprocessing import MinMaxScaler
 
 
@@ -20,7 +21,10 @@ class CSVFileNotFound(Exception):
 
 # TODO: what happens when that date does not exist
 def reshape_data(df, start_date, end_date):
+    print(start_date)
     if start_date and end_date:
+        print(start_date)
+
         df = df.set_index('Date')[start_date:end_date]
     elif start_date:
         df = df.set_index('Date')[start_date:]
@@ -40,6 +44,7 @@ def norm_save_scaler(df, model_name, start_date, end_date):
 def norm_use_scaler(df, model_name, start_date, end_date):
     dates, data = reshape_data(df, start_date, end_date)
     scaler = joblib.load(f'./objects/scalers/{model_name}.gz')
+    #display(dates)
     return dates, scaler.transform(data)
 
 
@@ -58,6 +63,7 @@ def concat_csv(lat, lon, years):
             pd.read_csv(f'./data/csv/{lat}_{lon}/{year}.csv', parse_dates=True),
             ignore_index=True
         )
+
     return df
 
 
